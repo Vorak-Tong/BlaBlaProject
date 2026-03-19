@@ -7,6 +7,7 @@ import 'package:blabla/data/repositories/ride_preference/ride_preference_reposit
 import 'package:blabla/data/repositories/user/user_repository.dart';
 import 'package:blabla/data/repositories/user/user_repository_mock.dart';
 import 'package:blabla/main_common.dart';
+import 'package:blabla/ui/states/ride_preference_state.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -29,6 +30,11 @@ void mainDev() {
         Provider<RidePreferenceRepository>(
           create: (context) => RidePreferenceRepositoryMock(
             locationRepository: context.read<LocationRepository>(),
+          ),
+        ),
+        ChangeNotifierProvider<RidePreferenceState>(
+          create: (context) => RidePreferenceState(
+            ridePreferenceRepository: context.read<RidePreferenceRepository>(),
           ),
         ),
       ],
