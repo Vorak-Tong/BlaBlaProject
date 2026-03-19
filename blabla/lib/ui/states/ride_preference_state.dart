@@ -13,7 +13,9 @@ class RidePreferenceState extends ChangeNotifier{
   RidePreferenceState({
     required this.ridePreferenceRepository,
   }) {
-    _preferenceHistory = ridePreferenceRepository.getPreferenceHistory();
+    _preferenceHistory = List<RidePreference>.from(
+      ridePreferenceRepository.getPreferenceHistory(),
+    );
   }
 
   RidePreference? get selectedPreference => _selectedPreference;
