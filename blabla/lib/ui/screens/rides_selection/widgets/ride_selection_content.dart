@@ -1,5 +1,6 @@
 import 'package:blabla/ui/screens/rides_selection/view_model/rides_selection_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../model/ride/ride.dart';
 import '../../../theme/theme.dart';
@@ -8,7 +9,6 @@ import '../widgets/rides_selection_header.dart';
 import '../widgets/rides_selection_tile.dart';
 
 class RidesSelectionContent extends StatelessWidget {
-  final RidesSelectionViewModel viewModel;
   final VoidCallback onBackPressed;
   final VoidCallback onFilterPressed;
   final Future<void> Function() onPreferencePressed;
@@ -16,7 +16,6 @@ class RidesSelectionContent extends StatelessWidget {
 
   const RidesSelectionContent({
     super.key,
-    required this.viewModel,
     required this.onBackPressed,
     required this.onFilterPressed,
     required this.onPreferencePressed,
@@ -25,6 +24,8 @@ class RidesSelectionContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final viewModel = context.watch<RidesSelectionViewModel>();
+
     return ListenableBuilder(
       listenable: viewModel,
       builder: (context, child) {

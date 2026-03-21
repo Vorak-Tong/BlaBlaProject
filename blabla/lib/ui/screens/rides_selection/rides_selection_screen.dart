@@ -16,73 +16,50 @@ import '../../../utils/animations_util.dart' show AnimationUtils;
 ///   -  re-define the ride preferences
 ///   -  activate some filters.
 ///
-
-class RidesSelectionScreen extends StatefulWidget {
+class RidesSelectionScreen extends StatelessWidget {
   const RidesSelectionScreen({super.key});
 
   @override
-  State<RidesSelectionScreen> createState() => _RidesSelectionScreenState();
-}
-
-class _RidesSelectionScreenState extends State<RidesSelectionScreen> {
-  late RidesSelectionViewModel viewModel;
-
-  @override
-  void initState() {
-    super.initState();
-
-    final ridePreferenceState = context.read<RidePreferenceState>();
-    final rideRepository = context.read<RideRepository>();
-
-    viewModel = RidesSelectionViewModel(
-      ridePreferenceState: ridePreferenceState,
-      rideRepository: rideRepository,
-    );
-  }
-
-  void onBackTap() {
-    Navigator.pop(context);
-  }
-
-  void onFilterPressed() {
-    // TODO
-  }
-
-  void onRidePressed(Ride ride) {
-    // TODO
-  }
-
-  Future<void> onPreferencePressed() async {
-    // 1 - Navigate to the rides preference picker
-    final RidePreference? newPreference = await Navigator.of(context)
-        .push<RidePreference>(
-          AnimationUtils.createRightToLeftRoute(
-            RidePreferenceModal(
-              initialPreference: viewModel.selectedRidePreference,
-            ),
-          ),
-        );
-
-    if (newPreference != null) {
-      // 2 - Ask the service to update the current preference
-      viewModel.selectRidePreference(newPreference);
-    }
-  }
-
-  @override
-  void dispose() {
-    viewModel.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return RidesSelectionContent(
-      viewModel: viewModel,
-      onBackPressed: onBackTap,
-      onFilterPressed: onFilterPressed,
-      onPreferencePressed: onPreferencePressed,
-      onRidePressed: onRidePressed,
+    void onBackTap() {
+      Navigator.pop(context);
+    }
+
+    void onFilterPressed() {
+      // TODO
+    }
+
+    void onRidePressed(Ride ride) {
+      // TODO
+    }
+
+    Future<void> onPreferencePressed() async {
+      final viewModel = context.read<RidesSelectionViewModel>();
+      final RidePreference? newPreference = await Navigator.of(context)
+          .push<RidePreference>(
+            AnimationUtils.createRightToLeftRoute(
+              RidePreferenceModal(
+                initialPreference: viewModel.selectedRidePreference,
+              ),
+            ),
+          );
+
+      if (newPreference != null) {
+        viewModel.selectRidePreference(newPreference);
+      }
+    }
+
+    return ChangeNotifierProvider(
+      create: (_) => RidesSelectionViewModel(
+        ridePreferenceState: context.read<RidePreferenceState>(),
+        rideRepository: context.read<RideRepository>(),
+      ),
+      child: RidesSelectionContent(
+        onBackPressed: onBackTap,
+        onFilterPressed: onFilterPressed,
+        onPreferencePressed: onPreferencePressed,
+        onRidePressed: onRidePressed,
+      ),
     );
   }
 }
