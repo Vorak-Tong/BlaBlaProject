@@ -13,55 +13,23 @@ import '../../../utils/animations_util.dart';
 /// - Enter his/her ride preference and launch a search on it
 /// - Or select a last entered ride preferences and launch a search on it
 ///
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
+  Widget build(BuildContext context) {
+    Future<void> onSearchRequested(RidePreference preference) async {
+      await Navigator.of(context).push(
+        AnimationUtils.createBottomToTopRoute(const RidesSelectionScreen()),
+      );
+    }
 
-class _HomeScreenState extends State<HomeScreen> {
-  // void onRidePrefSelected(RidePreference selectedPreference) async {
-  //   // 1- Ask the service to update the current preference
-  //   final ridePreferenceState = context.read<RidePreferenceState>();
-
-  //   ridePreferenceState.selectPreference(selectedPreference);
-
-  //   // 2 - Navigate to the rides screen
-  //   await Navigator.of(
-  //     context,
-  //   ).push(AnimationUtils.createBottomToTopRoute(RidesSelectionScreen()));
-
-  //   // 3 - After wait  - Update the state   - TODO Improve this with proper state managagement
-  //   setState(() {});
-  late HomeViewModel viewModel;
-
-  @override
-  void initState() {
-    super.initState();
-
-    final ridePreferenceState = context.read<RidePreferenceState>();
-
-    viewModel = HomeViewModel(
-      ridePreferenceState: ridePreferenceState,
-      onSearchRequested: onSearchRequested,
+    return ChangeNotifierProvider(
+      create: (_) => HomeViewModel(
+        ridePreferenceState: context.read<RidePreferenceState>(),
+        onSearchRequested: onSearchRequested,
+      ),
+      child: const HomeContent(),
     );
-  }
-
-  Future<void> onSearchRequested(RidePreference preference) async {
-    await Navigator.of(
-      context,
-    ).push(AnimationUtils.createBottomToTopRoute(const RidesSelectionScreen()));
-  }
-
-  @override
-  void dispose() {
-    viewModel.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(context) {
-    return HomeContent(viewModel: viewModel);
   }
 }

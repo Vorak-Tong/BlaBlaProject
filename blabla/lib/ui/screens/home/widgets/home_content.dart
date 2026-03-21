@@ -1,5 +1,6 @@
 import 'package:blabla/ui/screens/home/view_model/home_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../theme/theme.dart';
 import '../../../widgets/pickers/bla_ride_preference_picker.dart';
@@ -8,25 +9,26 @@ import '../widgets/home_history_tile.dart';
 const String blablaHomeImagePath = 'assets/images/blabla_home.png';
 
 class HomeContent extends StatelessWidget {
-  final HomeViewModel viewModel;
-  const HomeContent({super.key, required this.viewModel});
+  const HomeContent({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final viewModel = context.watch<HomeViewModel>();
+
     return ListenableBuilder(
       listenable: viewModel,
       builder: (context, child) {
         return Stack(
           children: [
             _buildBackground(),
-            _buildForeground(),
+            _buildForeground(viewModel),
           ],
         );
       },
     );
   }
 
-  Widget _buildForeground() {
+  Widget _buildForeground(HomeViewModel viewModel) {
     return Column(
       children: [
         // 1 - THE HEADER
@@ -58,7 +60,7 @@ class HomeContent extends StatelessWidget {
               SizedBox(height: BlaSpacings.m),
 
               // 3 - THE HISTORY
-              _buildHistory(),
+              _buildHistory(viewModel),
             ],
           ),
         ),
@@ -66,7 +68,7 @@ class HomeContent extends StatelessWidget {
     );
   }
 
-  Widget _buildHistory() {
+  Widget _buildHistory(HomeViewModel viewModel) {
     // Reverse the history of preferences
     final history = viewModel.history.reversed.toList();
     return SizedBox(
